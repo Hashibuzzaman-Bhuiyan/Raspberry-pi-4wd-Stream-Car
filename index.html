@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control The Robot</title>
+	<style>
+    	@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+ 
+    	body {
+            font-family: 'Orbitron', sans-serif;
+        	margin: 0;
+        	padding: 0;
+            background-color: #333;
+        	color: white;
+        	display: flex;
+            justify-content: flex-start; /* Align items to the left */
+            align-items: flex-start;
+        	padding: 20px;
+        	flex-wrap: wrap; /* Allow wrapping for responsive design */
+    	}
+ 
+        #video-container {
+            margin-top: 30px; /* Reduced the margin to move it up */
+        	width: 60%; /* Set width to 60% of the screen */
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 0 10px 5px rgba(0, 255, 255, 0.8); /* Neon glow effect */
+        	padding: 10px; /* Padding inside the border */
+            background: #000; /* Dark background to enhance neon effect */
+        	position: relative;
+    	}
+ 
+        #video-container::before {
+        	content: "";
+  	      position: absolute;
+        	top: -8px;
+        	left: -8px;
+        	right: -8px;
+        	bottom: -8px;
+            background: linear-gradient(45deg, #00ff00, #ff00ff, #00ffff); /* Neon gradient effect */
+        	z-index: -1;
+ 	       border-radius: 20px; /* Keep rounded corners */
+        	animation: neon-glow 1.5s ease-in-out infinite alternate; /* Neon glow animation */
+    	}
+ 
+    	@keyframes neon-glow {
+        	0% {
+                box-shadow: 0 0 10px 5px rgba(0, 255, 255, 0.8);
+        	}
+        	100% {
+                box-shadow: 0 0 20px 10px rgba(0, 255, 255, 1);
+        	}
+    	}
+ 
+        #controls-container {
+        	width: 35%; /* Set width to 35% of the screen */
+            margin-top: 20px; /* Reduced margin to shift the container upwards */
+    	}
+ 
+    	video {
+        	width: 100%;
+        	border: 5px solid #fff;
+    	}
+ 
+    	#controls {
+            margin-top: 10px; /* Reduced space between controls */
+    	}
+ 
+    	button {
+            background-color: #4CAF50;
+        	border: none;
+        	color: white;
+        	padding: 15px 32px;
+            text-align: center;
+        	font-size: 16px;
+        	margin: 5px;
+        	cursor: pointer;
+            border-radius: 5px;
+        	position: relative;
+        	z-index: 1;
+            font-family: 'Orbitron', sans-serif; /* Stylish font */
+    	}
+ 
+    	button:hover {
+            background-color: transparent;
+    	}
+ 
+        button:disabled {
+            background-color: #ccc;
+        	cursor: not-allowed;
+ 	   }
+ 
+    	/* Neon Border Effect for Buttons */
+    	button::before {
+        	content: "";
+        	position: absolute;
+        	top: -8px;
+        	left: -8px;
+        	right: -8px;
+        	bottom: -8px;
+            background: linear-gradient(45deg, #00ff00, #ff00ff, #00ffff); /* Neon gradient effect */
+        	z-index: -1;
+            border-radius: 10px; /* Rounded corners */
+        	animation: neon-glow 1.5s ease-in-out infinite alternate; /* Neon glow animation */
+        }
+ 
+        .movement-controls {
+            margin-top: 10px; /* Reduced margin to bring movement controls up */
+            text-align: center;
+    	}
+ 
+        .movement-controls button {
+        	width: 60px;
+        	height: 60px;
+        	font-size: 18px;
+            font-weight: bold;
+        	margin: 5px;
+            text-align: center; /* Align text to center */
+        	padding: 0; /* Remove padding to ensure alignment */
+    	}
+ 
+    	.space {
+        	width: 60px;
+        	height: 60px;
+        	margin: 5px;
+        	display: inline-block;
+    	}
+ 
+        #streaming-controls {
+            margin-top: 20px; /* Reduced space between streaming controls */
+        	text-align: center;
+    	}
+ 
+        #streaming-controls button {
+        	margin: 10px 0; /* Added space vertically between the buttons */
+    	}
+ 
+    	/* Neon Border for Control and Streaming Buttons */
+        .neon-border-button {
+        	position: relative;
+            border-radius: 10px;
+        	padding: 15px 30px;
+        	font-size: 16px;
+            background-color: transparent;
+        	color: #fff;
+        	border: 2px solid transparent;
+        	cursor: pointer;
+        	outline: none;
+    	}
+ 
+        .neon-border-button::before {
+        	content: "";
+        	position: absolute;
+        	top: -8px;
+        	left: -8px;
+        	right: -8px;
+        	bottom: -8px;
+            background: linear-gradient(45deg, #00ff00, #ff00ff, #00ffff); /* Neon gradient effect */
+        	z-index: -1;
+            border-radius: 10px;
+        	animation: neon-glow 1.5s ease-in-out infinite alternate; /* Neon glow animation */
+    	}
+ 
+        .neon-border-button:hover {
+            background-color: transparent;
+    	}
+ 
+        .neon-border-button:active {
+            background-color: transparent;
+    	}
+ 
+        .control-buttons {
+        	display: flex;
+            flex-direction: column;
+            align-items: center;
+    	}
+ 
+    	/* Space between buttons */
+        .control-buttons button + button {
+            margin-top: 20px;
+    	}
+ 
+    	/* Add space between movement buttons and streaming buttons */
+        .movement-controls {
+            margin-bottom: 20px; /* Add vertical space */
+    	}
+ 
+    	/* Responsive Design */
+        @media (max-width: 768px) {
+        	body {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+        	}
+ 
+            #video-container {
+            	width: 100%;
+                margin-bottom: 20px;
+        	}
+ 
+            #controls-container {
+            	width: 100%;
+        	}
+ 
+            .control-buttons button {
+            	width: 70%;
+                font-size: 14px;
+                padding: 12px;
+        	}
+ 
+            #streaming-controls button {
+            	width: 70%;
+        	}
+    	}
+	</style>
+</head>
+<body>
+	<div id="controls-container">
+        <h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Control The Robot</h2>
+        <h3>&nbsp;&nbsp;&nbsp;&nbsp;Have a Safe Drive, Have a Good Life</h3><br>
+    	<div class="movement-controls">
+        	<button class="neon-border-button" id="move-forward">W</button><br>
+        	<button class="neon-border-button" id="move-left">A</button>
+        	<div class="space"></div>
+        	<button class="neon-border-button" id="move-right">D</button><br><br><br>
+        	<button class="neon-border-button" id="move-backward">S</button>
+    	</div>
+ 
+    	<div class="control-buttons">
+        	<button class="neon-border-button" id="start-stream"><b>View</b></button>
+        	<button class="neon-border-button" id="stop-stream" disabled><b>Hide</b></button>
+    	</div>
+	</div>
+ 
+	<div id="video-container">
+    	<img src="{{ url_for('video_feed') }}" alt="Video Feed" id="video-stream" />
+	</div>
+ 
+	<script>
+    	// Function to handle "View" button
+    	function startStream() {
+            fetch('/start_stream', { method: 'POST' })
+                .then(response => response.json())
+            	.then(data => {
+                	if (data.success) {
+                        document.getElementById('start-stream').disabled = true;
+                        document.getElementById('stop-stream').disabled = false;
+                	}
+            	});
+    	}
+ 
+    	// Function to handle "Hide" button
+    	function stopStream() {
+            fetch('/stop_stream', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                	if (data.success) {
+                        document.getElementById('start-stream').disabled = false;
+                        document.getElementById('stop-stream').disabled = true;
+                	}
+            	});
+    	}
+ 
+    	// Handle movement controls using keyboard events
+        document.addEventListener("keydown", function(event) {
+        	if (event.key === "w") {
+                fetch("/move", { method: "POST", body: new URLSearchParams({ command: "w" }) });
+            } else if (event.key === "a") {
+                fetch("/move", { method: "POST", body: new URLSearchParams({ command: "a" }) });
+        	} else if (event.key === "s") {
+                fetch("/move", { method: "POST", body: new URLSearchParams({ command: "s" }) });
+        	} else if (event.key === "d") {
+                fetch("/move", { method: "POST", body: new URLSearchParams({ command: "d" }) });
+        	} else if (event.key === "z") {
+                startStream();
+        	} else if (event.key === "x") {
+                stopStream();
+        	}
+    	});
+ 
+        document.addEventListener("keyup", function(event) {
+        	if (["w", "a", "s", "d"].includes(event.key)) {
+                fetch("/move", { method: "POST", body: new URLSearchParams({ command: "q" }) }); // Stop movement
+        	}
+    	});
+	</script>
+</body>
+</html>
+
